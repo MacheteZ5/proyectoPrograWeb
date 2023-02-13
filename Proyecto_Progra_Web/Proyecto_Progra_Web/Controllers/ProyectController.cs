@@ -14,5 +14,26 @@ namespace Proyecto_Progra_Web.Controllers
         {
             return View();
         }
+        public IActionResult main()
+        {
+            return View("main");
+        }
+        public IActionResult create()
+        {
+            return View("mantenimiento-create");
+        }
+        public IActionResult delete()
+        {
+            return View("mantenimiento-delete");
+        }
+        public IActionResult update()
+        {
+            return View("mantenimiento-update");
+        }
+        public IActionResult about()
+        {
+            return View("about");
+        }
+        
     }
 }
