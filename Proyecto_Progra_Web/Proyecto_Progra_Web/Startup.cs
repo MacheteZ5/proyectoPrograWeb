@@ -50,7 +50,7 @@ namespace Proyecto_Progra_Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Proyect}/{action=login}/{id?}");
+                    pattern: "{controller=Usuario}/{action=login}/{id?}");
             });
         }
     }
