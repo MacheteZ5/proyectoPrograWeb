@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace P_Progra_Web.Models;
 
-public partial class Person
+public partial class Person 
 {
     public int Id { get; set; }
 

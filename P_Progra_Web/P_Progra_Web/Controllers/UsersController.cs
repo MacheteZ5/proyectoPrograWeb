@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,6 +22,29 @@ namespace P_Progra_Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> main( User user)
+        {
+            var userName = user.Username;
+            var password = user.Password;
+            var userInformation = await _context.Users.FirstOrDefaultAsync(m => m.Username == userName);
+            if (userInformation == null)
+            {
+                return NotFound();
+            }
+            //password verification
+            if(password == userInformation.Password)
+            {
+                return RedirectToAction("Index", "ContactLists");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Users", user);
+            }
+        }
+
 
         // GET: Users
         public async Task<IActionResult> Index()
@@ -64,12 +88,12 @@ namespace P_Progra_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Username,Password,StatusId,IdPersona,FecTransac")] User user)
         {
-            if (ModelState.IsValid)
-            {
+            /*if (ModelState.IsValid)
+            {*/
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+                return RedirectToAction("login");
+            //}
             ViewData["IdPersona"] = new SelectList(_context.People, "Id", "Id", user.IdPersona);
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", user.StatusId);
             return View(user);
