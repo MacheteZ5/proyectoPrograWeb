@@ -40,7 +40,7 @@ namespace PPW.Controllers
                     var userInformation = await Functions.APIService.GetUser(username);
                     if (userInformation.Password == password)
                     {
-                        return RedirectToAction("Index", "Chats");
+                        return RedirectToAction("Index", "Chats", new {@ID = userInformation.Id});
                     }
                 }
 

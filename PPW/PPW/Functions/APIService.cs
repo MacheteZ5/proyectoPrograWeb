@@ -9,7 +9,7 @@ namespace PPW.Functions
         private static int timeout = 30;
         private static string url = "https://localhost:7025/";
 
-        //Movie Controller
+        //User Controller
         public static async System.Threading.Tasks.Task<IEnumerable<User>> GetUsersList()
         {
             HttpClientHandler clientHandler = new HttpClientHandler();
@@ -17,7 +17,7 @@ namespace PPW.Functions
             // Pass the handler to httpclient(from you are calling api)
             HttpClient httpClient = new HttpClient(clientHandler);
             httpClient.Timeout = TimeSpan.FromSeconds(timeout);
-            var response = await httpClient.GetAsync(url + "Movie/GetList");
+            var response = await httpClient.GetAsync(url + "/GetList");
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<IEnumerable<User>>(await response.Content.ReadAsStringAsync());
@@ -85,7 +85,7 @@ namespace PPW.Functions
                 throw new Exception(response.StatusCode.ToString());
             }
         }
-        public static async System.Threading.Tasks.Task<bool> UpdateMovie(User movie)
+        public static async System.Threading.Tasks.Task<bool> UpdateUser(User movie)
         {
             var json_ = JsonConvert.SerializeObject(movie);
             var content = new StringContent(json_, Encoding.UTF8, "application/json");
@@ -94,7 +94,7 @@ namespace PPW.Functions
             // Pass the handler to httpclient(from you are calling api)
             HttpClient httpClient = new HttpClient(clientHandler);
             httpClient.Timeout = TimeSpan.FromSeconds(timeout);
-            var response = await httpClient.PostAsync(url + "Movie/Update", content);
+            var response = await httpClient.PostAsync(url + "/", content);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return true;
@@ -105,7 +105,7 @@ namespace PPW.Functions
             }
         }
 
-        public static async System.Threading.Tasks.Task<bool> DeleteMovie(User movie)
+        public static async System.Threading.Tasks.Task<bool> DeleteUser(User movie)
         {
             var json_ = JsonConvert.SerializeObject(movie);
             var content = new StringContent(json_, Encoding.UTF8, "application/json");
@@ -114,7 +114,7 @@ namespace PPW.Functions
             // Pass the handler to httpclient(from you are calling api)
             HttpClient httpClient = new HttpClient(clientHandler);
             httpClient.Timeout = TimeSpan.FromSeconds(timeout);
-            var response = await httpClient.PostAsync(url + "Movie/Delete", content);
+            var response = await httpClient.PostAsync(url + "/", content);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return true;
@@ -124,5 +124,44 @@ namespace PPW.Functions
                 throw new Exception(response.StatusCode.ToString());
             }
         }
+
+        //Contact Controller
+        public static async System.Threading.Tasks.Task<IEnumerable<Contact>> GetContactsList()
+        {
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.GetAsync(url + "Contacts/GetAllContacts");
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<IEnumerable<Contact>>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                throw new Exception(response.StatusCode.ToString());
+            }
+        }
+        public static async System.Threading.Tasks.Task<bool> SetContact(Contact contact)
+        {
+            var json_ = JsonConvert.SerializeObject(contact);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            // Pass the handler to httpclient(from you are calling api)
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PostAsync(url + "Contacts/SetContact", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
     }
 }
