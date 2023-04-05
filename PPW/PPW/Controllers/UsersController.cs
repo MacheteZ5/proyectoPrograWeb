@@ -71,13 +71,11 @@ namespace PPW.Controllers
 
        
 
-
-        // GET: Users/Create
         public IActionResult Create()
         {
+            ViewBag.Genero = new List<string>() { "Masculino", "Femenino" };
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -86,31 +84,18 @@ namespace PPW.Controllers
             var username = user.Username;
             if (!await Functions.APIService.GetValidationUser(username))
             {
-                if (ModelState.IsValid)
-                {
-                    user.Username = username.ToUpper();
-                    user.StatusId = 1;
-                    await Functions.APIService.SetUser(user);
-                    return RedirectToAction(nameof(Index));
-                }
+                user.Username = username.ToUpper();
+                user.StatusId = 1;
+                await Functions.APIService.SetUser(user);
+                return RedirectToAction(nameof(Index));
             }
             return View(user);
         }
 
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit()
         {
-            if (id == null || _context.Users == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
+            return View();
         }
 
         // POST: Users/Edit/5
@@ -118,34 +103,32 @@ namespace PPW.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Password,StatusId,FirstName,LastName,Phone,Birthdate,Email,Genero,FecTransac")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Username,Password")] User user)
         {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
+            var username = user.Username;
+            var password = user.Password;
 
-            if (ModelState.IsValid)
+            var oldUser = await Functions.APIService.GetUser(username);
+            try
             {
-                try
+                oldUser.Password = password;
+                if (await Functions.APIService.updateUser(oldUser))
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(user.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return View();
         }
 
         // GET: Users/Delete/5

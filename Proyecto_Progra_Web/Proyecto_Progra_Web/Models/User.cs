@@ -11,13 +11,21 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public int? StatusId { get; set; }
+    public int StatusId { get; set; }
 
-    public int? IdPersona { get; set; }
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
+
+    public string Phone { get; set; } = null!;
+
+    public DateTime Birthdate { get; set; }
+
+    public string Email { get; set; } = null!;
+
+    public bool Genero { get; set; }
 
     public DateTime? FecTransac { get; set; }
 
-    public virtual Person? IdPersonaNavigation { get; set; }
-
-    public virtual Status? Status { get; set; }
+    //public virtual Status Status { get; set; } = null!;
 }

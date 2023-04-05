@@ -36,14 +36,14 @@
                             </form>
                         </div>
                         <div>
-                              <a asp-action="Edit" class="text-white-50">Forgot password?</a>
+                            <a asp-action="Edit" asp-route-id="Username" class="text-white-50">Forgot password?</a>
                         </div>
                         <div>
                             <p class="mb-0">
                                 Don't have an account?
                             </p>
-                            <form asp-action="Create">
-                                <input class="btn btn-outline-light btn-lg px-5" type="submit" value="Create" />
+                                <form asp-action="Create">
+                                    <input class="btn btn-outline-light btn-lg px-5" type="submit" value="Create" />
                             </form>
                         </div>
 

@@ -111,8 +111,8 @@ namespace API.Controllers
         }
 
         [Route("UpdateUser")]
-        [HttpPost]
-        public async Task<PPW.Models.generalResult> ModifyUser([FromBody] PPW.Models.User user)
+        [HttpPut]
+        public async Task<PPW.Models.generalResult> UpdateUser([FromBody] PPW.Models.User user)
         {
             _context = new PPW.Models.ProgramacionWebContext();
             var generalResult = new PPW.Models.generalResult
@@ -120,38 +120,7 @@ namespace API.Controllers
                 Result = false
             };
             try
-            {
-                /*var usuario = await _context.Users.Select(s =>
-                new User
-                {
-                    Id = s.Id,
-                    Username = s.Username,
-                    Password = s.Password,
-                    StatusId = s.StatusId,
-                    FirstName = s.FirstName,
-                    LastName = s.LastName,
-                    Phone = s.Phone,
-                    Birthdate = s.Birthdate,
-                    Email = s.Email,
-                    Genero = s.Genero,
-                    FecTransac = s.FecTransac
-                }
-                ).FirstOrDefaultAsync(s => s.Username == userName && s.StatusId == 1);
-                var newUser = new User
-                {
-                    //lo que se necesita para realizar el update es la llave primaria, en este caso el ID.
-                    Id = usuario.Id,
-                    Username = usuario.Username,
-                    Password = user.Password,
-                    StatusId = user.StatusId,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Phone = user.Phone,
-                    Birthdate = user.Birthdate,
-                    Email = user.Email,
-                    Genero = user.Genero,
-                    FecTransac = usuario.FecTransac
-                };*/
+            { 
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();
             }

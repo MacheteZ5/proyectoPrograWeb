@@ -1,7 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Proyecto_Progra_Web.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+var connection = builder.Configuration.GetConnectionString("MySQLConnection");
+builder.Services.AddDbContext<ProgramacionWebContext>(options => options.UseMySQL(connection));
+
 
 var app = builder.Build();
 
@@ -22,6 +28,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Usuario}/{action=login}/{id?}");
+    pattern: "{controller=Users}/{action=Index}/{id?}");
 
 app.Run();

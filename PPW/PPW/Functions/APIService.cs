@@ -82,26 +82,26 @@ namespace PPW.Functions
             }
             else
             {
-                throw new Exception(response.StatusCode.ToString());
+                return false;
             }
         }
-        public static async System.Threading.Tasks.Task<bool> UpdateUser(User movie)
+        public static async System.Threading.Tasks.Task<bool> updateUser(User user)
         {
-            var json_ = JsonConvert.SerializeObject(movie);
+            var json_ = JsonConvert.SerializeObject(user);
             var content = new StringContent(json_, Encoding.UTF8, "application/json");
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
             // Pass the handler to httpclient(from you are calling api)
             HttpClient httpClient = new HttpClient(clientHandler);
             httpClient.Timeout = TimeSpan.FromSeconds(timeout);
-            var response = await httpClient.PostAsync(url + "/", content);
+            var response = await httpClient.PutAsync(url + "Users/UpdateUser", content);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return true;
             }
             else
             {
-                throw new Exception(response.StatusCode.ToString());
+                return false;
             }
         }
 
