@@ -21,32 +21,25 @@ namespace Proyecto_Progra_Web.Controllers
         // GET: Contacts
         public async Task<IActionResult> Index()
         {
-            return _context.Contacts != null ?
-                        View(await _context.Contacts.ToListAsync()) :
-                        Problem("Entity set 'ProgramacionWebContext.Contacts'  is null.");
+           
+            return View();
         }
 
         // GET: Contacts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Contacts == null)
-            {
-                return NotFound();
-            }
-
-            var contact = await _context.Contacts
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (contact == null)
-            {
-                return NotFound();
-            }
-
-            return View(contact);
+            
+            return View();
         }
 
-        // GET: Contacts/Create
-        public IActionResult Create()
+
+        public async Task<IActionResult> Create(int ID)
         {
+            ViewBag.ID = ID;
+            var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(ID) };
+            ViewData["PrimerUserId"] = new SelectList(alternateList, "Id","Username");
+            var allUsers = await Functions.APIService.GetAllUsers();
+            ViewData["SegundoUserId"] = new SelectList(allUsers, "Id", "Username");
             return View();
         }
 
@@ -57,12 +50,15 @@ namespace Proyecto_Progra_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PrimerUserId,SegundoUserId,FecTransac")] Contact contact)
         {
-            if (ModelState.IsValid)
+            contact.Id = 0;
+            if(await Functions.APIService.SetContact(contact))
             {
-                _context.Add(contact);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Chats", new { @ID = contact.PrimerUserId });
             }
+            ViewBag.ID = contact.PrimerUserId;
+            var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(contact.PrimerUserId) };
+            ViewData["PrimerUserId"] = new SelectList(alternateList, "Id", "Username");
+            ViewData["SegundoUserId"] = new SelectList(await Functions.APIService.GetAllUsers(), "Id", "Username");
             return View(contact);
         }
 
@@ -79,6 +75,8 @@ namespace Proyecto_Progra_Web.Controllers
             {
                 return NotFound();
             }
+            ViewData["PrimerUserId"] = new SelectList(_context.Users, "Id", "Id", contact.PrimerUserId);
+            ViewData["SegundoUserId"] = new SelectList(_context.Users, "Id", "Id", contact.SegundoUserId);
             return View(contact);
         }
 
@@ -114,25 +112,15 @@ namespace Proyecto_Progra_Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["PrimerUserId"] = new SelectList(_context.Users, "Id", "Id", contact.PrimerUserId);
+            ViewData["SegundoUserId"] = new SelectList(_context.Users, "Id", "Id", contact.SegundoUserId);
             return View(contact);
         }
 
         // GET: Contacts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Contacts == null)
-            {
-                return NotFound();
-            }
-
-            var contact = await _context.Contacts
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (contact == null)
-            {
-                return NotFound();
-            }
-
-            return View(contact);
+            return View();
         }
 
         // POST: Contacts/Delete/5
@@ -149,14 +137,14 @@ namespace Proyecto_Progra_Web.Controllers
             {
                 _context.Contacts.Remove(contact);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ContactExists(int id)
         {
-            return (_context.Contacts?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Contacts?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

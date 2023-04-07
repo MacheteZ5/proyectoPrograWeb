@@ -94,15 +94,16 @@ namespace Proyecto_Progra_Web.Controllers
             return View(user);
         }
 
-
-
-
-        // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             return View();
         }
 
+        
+        
+        
+        
+        
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

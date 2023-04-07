@@ -57,6 +57,54 @@ namespace API.Controllers
             return user;
         }
 
+        [Route("GetUserbyID")]
+        [HttpPost]
+        public async Task<Proyecto_Progra_Web.Models.User> GetUserbyID([FromBody] int ID)
+        {
+            _context = new Proyecto_Progra_Web.Models.ProgramacionWebContext();
+            var user = await _context.Users.Select(s =>
+            new Proyecto_Progra_Web.Models.User
+            {
+                Id = s.Id,
+                Username = s.Username,
+                Password = s.Password,
+                StatusId = s.StatusId,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                Phone = s.Phone,
+                Birthdate = s.Birthdate,
+                Email = s.Email,
+                Genero = s.Genero,
+                FecTransac = s.FecTransac
+            }
+            ).FirstOrDefaultAsync(s => s.Id == ID && s.StatusId == 1);
+            return user;
+        }
+
+        [Route("GetAllUsers")]
+        [HttpGet]
+        public async Task<IEnumerable<Proyecto_Progra_Web.Models.User>> GetAllUsers()
+        {
+            _context = new Proyecto_Progra_Web.Models.ProgramacionWebContext();
+            var user = await _context.Users.Select(s =>
+            new Proyecto_Progra_Web.Models.User
+            {
+                Id = s.Id,
+                Username = s.Username,
+                Password = s.Password,
+                StatusId = s.StatusId,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                Phone = s.Phone,
+                Birthdate = s.Birthdate,
+                Email = s.Email,
+                Genero = s.Genero,
+                FecTransac = s.FecTransac
+            }
+            ).ToListAsync();
+            return user;
+        }
+
         [Route("CreateUser")]
         [HttpPost]
         public async Task<Proyecto_Progra_Web.Models.generalResult> CreateUser([FromBody] Proyecto_Progra_Web.Models.User user)
@@ -101,5 +149,8 @@ namespace API.Controllers
             }
             return generalResult;
         }
+
+        
+
     }
 }

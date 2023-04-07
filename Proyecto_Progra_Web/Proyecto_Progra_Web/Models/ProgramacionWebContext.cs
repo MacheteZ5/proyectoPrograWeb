@@ -24,16 +24,9 @@ public partial class ProgramacionWebContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json").Build();
-            var connectionString = configuration.GetConnectionString("MySQLConnection");
-            optionsBuilder.UseMySQL(connectionString);
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySQL("server=127.0.0.1;userid=jose;password=Zerafina5H;database=programacion_web;TreatTinyAsBoolean=False");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>
@@ -41,6 +34,8 @@ public partial class ProgramacionWebContext : DbContext
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("chat");
+
+            entity.HasIndex(e => e.ContactId, "FK_ContactID");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Archivos)
@@ -55,6 +50,11 @@ public partial class ProgramacionWebContext : DbContext
                 .HasMaxLength(8000)
                 .HasColumnName("mensaje");
             entity.Property(e => e.UserSend).HasColumnName("userSend");
+
+           /* entity.HasOne(d => d.Contact).WithMany(p => p.Chats)
+                .HasForeignKey(d => d.ContactId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ContactID");*/
         });
 
         modelBuilder.Entity<Contact>(entity =>
@@ -63,6 +63,10 @@ public partial class ProgramacionWebContext : DbContext
 
             entity.ToTable("contact");
 
+            entity.HasIndex(e => e.PrimerUserId, "FK_PPersonID");
+
+            entity.HasIndex(e => e.SegundoUserId, "FK_SPersonID");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.FecTransac)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -70,6 +74,16 @@ public partial class ProgramacionWebContext : DbContext
                 .HasColumnName("fec_transac");
             entity.Property(e => e.PrimerUserId).HasColumnName("primerUserId");
             entity.Property(e => e.SegundoUserId).HasColumnName("segundoUserId");
+
+            /*entity.HasOne(d => d.PrimerUser).WithMany(p => p.ContactPrimerUsers)
+                .HasForeignKey(d => d.PrimerUserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PPersonID");
+
+            entity.HasOne(d => d.SegundoUser).WithMany(p => p.ContactSegundoUsers)
+                .HasForeignKey(d => d.SegundoUserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SPersonID");*/
         });
 
         modelBuilder.Entity<Status>(entity =>
@@ -110,7 +124,7 @@ public partial class ProgramacionWebContext : DbContext
             entity.Property(e => e.StatusId).HasColumnName("Status_ID");
             entity.Property(e => e.Username).HasMaxLength(30);
 
-            /*entity.HasOne(d => d.Status).WithMany(p => p.Users)
+           /* entity.HasOne(d => d.Status).WithMany(p => p.Users)
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StatusID");*/

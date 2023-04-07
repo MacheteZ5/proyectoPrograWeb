@@ -16,4 +16,6 @@ public partial class Chat
     public string? Archivos { get; set; }
 
     public DateTime? FecTransac { get; set; }
+
+    public virtual Contact Contact { get; set; } = null!;
 }

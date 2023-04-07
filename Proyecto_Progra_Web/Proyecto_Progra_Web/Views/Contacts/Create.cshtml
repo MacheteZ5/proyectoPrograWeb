@@ -14,15 +14,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="PrimerUserId" class="control-label"></label>
-                <input asp-for="PrimerUserId" class="form-control" />
-                <span asp-validation-for="PrimerUserId" class="text-danger"></span>
+                <select asp-for="PrimerUserId" class ="form-control" asp-items="ViewBag.PrimerUserId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="SegundoUserId" class="control-label"></label>
-                <input asp-for="SegundoUserId" class="form-control" />
-                <span asp-validation-for="SegundoUserId" class="text-danger"></span>
+                <select asp-for="SegundoUserId" class ="form-control" asp-items="ViewBag.SegundoUserId"></select>
             </div>
             <div class="form-group">
+                <br />
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -30,7 +29,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-controller="Chats" asp-route-id="@ViewBag.ID">Back to List</a>
 </div>
 
 @section Scripts {

@@ -26,7 +26,7 @@ namespace Proyecto_Progra_Web.Functions
             }
             else
             {
-                return (opcion==1)?true:false;
+                return (opcion == 1) ? true : false;
             }
         }
         public static async System.Threading.Tasks.Task<User> GetUser(string UserName)
@@ -42,6 +42,42 @@ namespace Proyecto_Progra_Web.Functions
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public static async System.Threading.Tasks.Task<User> GetUserbyID(int ID)
+        {
+            var json_ = JsonConvert.SerializeObject(ID);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            // Pass the handler to httpclient(from you are calling api)
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PostAsync(url + "Users/GetUserbyID", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public static async System.Threading.Tasks.Task<IEnumerable<User>> GetAllUsers()
+        {
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            // Pass the handler to httpclient(from you are calling api)
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.GetAsync(url + "Users/GetAllUsers");
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<IEnumerable<User>> (await response.Content.ReadAsStringAsync());
             }
             else
             {
@@ -85,5 +121,42 @@ namespace Proyecto_Progra_Web.Functions
                 return false;
             }
         }
+
+        //Contact Controller
+        public static async System.Threading.Tasks.Task<IEnumerable<Contact>> GetContactsList()
+        {
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.GetAsync(url + "Contacts/GetAllContacts");
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<IEnumerable<Contact>>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                throw new Exception(response.StatusCode.ToString());
+            }
+        }
+        public static async System.Threading.Tasks.Task<bool> SetContact(Contact contact)
+        {
+            var json_ = JsonConvert.SerializeObject(contact);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PostAsync(url + "Contacts/SetContact", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(response.StatusCode.ToString());
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
-}
+ }

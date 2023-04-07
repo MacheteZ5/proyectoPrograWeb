@@ -12,4 +12,10 @@ public partial class Contact
     public int SegundoUserId { get; set; }
 
     public DateTime? FecTransac { get; set; }
+
+    /*public virtual ICollection<Chat> Chats { get; } = new List<Chat>();
+
+    public virtual User PrimerUser { get; set; } = null!;
+
+    public virtual User SegundoUser { get; set; } = null!;*/
 }

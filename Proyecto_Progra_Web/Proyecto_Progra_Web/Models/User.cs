@@ -27,5 +27,9 @@ public partial class User
 
     public DateTime? FecTransac { get; set; }
 
-    //public virtual Status Status { get; set; } = null!;
+    public virtual ICollection<Contact> ContactPrimerUsers { get; } = new List<Contact>();
+
+    public virtual ICollection<Contact> ContactSegundoUsers { get; } = new List<Contact>();
+
+    /*public virtual Status Status { get; set; } = null!;*/
 }
