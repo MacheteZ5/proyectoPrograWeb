@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Proyecto_Progra_Web.Models;
 
 namespace API.Controllers
 {
@@ -107,50 +108,60 @@ namespace API.Controllers
 
         [Route("CreateUser")]
         [HttpPost]
-        public async Task<Proyecto_Progra_Web.Models.generalResult> CreateUser([FromBody] Proyecto_Progra_Web.Models.User user)
+        public async Task<bool> CreateUser([FromBody] Proyecto_Progra_Web.Models.User user)
         {
             _context = new Proyecto_Progra_Web.Models.ProgramacionWebContext();
-            var generalResult = new Proyecto_Progra_Web.Models.generalResult
-            {
-                Result = false
-            };
+            bool result;
             try
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                generalResult.Result = true;
+                result = true;
             }
             catch (Exception ex)
             {
-                generalResult.Result = false;
-                generalResult.ErrorMessage = ex.Message;
+                var ErrorMessage = ex.Message;
+                result = false;
             }
-            return generalResult;
+            return result;
         }
 
         [Route("UpdateUser")]
         [HttpPut]
-        public async Task<Proyecto_Progra_Web.Models.generalResult> UpdateUser([FromBody] Proyecto_Progra_Web.Models.User user)
+        public async Task<bool> UpdateUser([FromBody] Proyecto_Progra_Web.Models.User user)
         {
             _context = new Proyecto_Progra_Web.Models.ProgramacionWebContext();
-            var generalResult = new Proyecto_Progra_Web.Models.generalResult
-            {
-                Result = false
-            };
+            bool result;
             try
             {
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();
+                result = true;
             }
             catch (Exception ex)
             {
-                generalResult.Result = false;
-                generalResult.ErrorMessage = ex.Message;
+                result = false;
             }
-            return generalResult;
+            return result;
         }
 
-        
-
+        [Route("DisableUser")]
+        [HttpPut]
+        public async Task<bool> DisableUser([FromBody] Proyecto_Progra_Web.Models.User user)
+        {
+            _context = new Proyecto_Progra_Web.Models.ProgramacionWebContext();
+            bool result;
+            try
+            {
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+            return result;
+        }
     }
 }

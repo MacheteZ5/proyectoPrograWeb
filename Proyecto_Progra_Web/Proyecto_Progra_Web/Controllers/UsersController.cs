@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using Proyecto_Progra_Web.Models;
 
 namespace Proyecto_Progra_Web.Controllers
@@ -12,67 +13,85 @@ namespace Proyecto_Progra_Web.Controllers
     public class UsersController : Controller
     {
         private ProgramacionWebContext _context;
+        private readonly IToastNotification _toastNotification;
 
-        public UsersController(ProgramacionWebContext context)
+        public UsersController(ProgramacionWebContext context, IToastNotification toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
         }
-
         public async Task<IActionResult> Index()
         {
             return View();
         }
-
         public async Task<IActionResult> main([Bind("Username,Password")] User user)
         {
             var username = user.Username;
             var password = user.Password;
-            if (username != "" && password != "")
+            if ((username != "" && password != "") && (username !=null && password !=null))
             {
                 if (await Functions.APIService.GetValidationUser(username,0))
                 {
                     var userInformation = await Functions.APIService.GetUser(username);
                     if (userInformation.Password == password)
                     {
+                        _toastNotification.AddSuccessToastMessage("Woo hoo - it works!");
                         return RedirectToAction("Index", "Chats", new { @ID = userInformation.Id });
                     }
+                    else
+                    {
+                        _toastNotification.AddErrorToastMessage("Contraseña incorrecta.");
+                    }
                 }
-
+                else
+                {
+                    _toastNotification.AddWarningToastMessage("El usuario ingresado no existe.");
+                }
+            }
+            else
+            {
+                _toastNotification.AddWarningToastMessage("Completar los campos correspondientes.");
             }
             return RedirectToAction(nameof(Index));
         }
-
         public IActionResult Create()
         {
+            _toastNotification.AddInfoToastMessage("Llenar cada campo con la información solicitada.");
             ViewBag.Genero = new List<string>() { "Masculino", "Femenino" };
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Username,Password,StatusId,FirstName,LastName,Phone,Birthdate,Email,Genero,FecTransac")] User user)
         {
-            var genero = (Request.Form["Genero"]=="Masculino")?true:false;
             var username = user.Username;
-            if (!await Functions.APIService.GetValidationUser(username,1))
+            if (!await Functions.APIService.GetValidationUser(username, 1))
             {
+                var genero = (Request.Form["Genero"] == "Masculino") ? true : false;
                 user.Genero = genero;
                 user.Username = username.ToUpper();
                 user.StatusId = 1;
                 if (await Functions.APIService.SetUser(user))
                 {
+                    _toastNotification.AddSuccessToastMessage("Creación de usuario exitosa.");
                     return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    _toastNotification.AddErrorToastMessage("Error al crear usuario.");
+                }
+            }
+            else
+            {
+                _toastNotification.AddWarningToastMessage("El usuario ingresado ya existe.");
             }
             ViewBag.Genero = new List<string>() { "Masculino", "Femenino" };
             return View(user);
         }
-
         public async Task<IActionResult> Edit()
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Username,Password")] User user)
@@ -87,46 +106,49 @@ namespace Proyecto_Progra_Web.Controllers
                     oldUser.Password = password;
                     if (await Functions.APIService.updateUser(oldUser))
                     {
+                        _toastNotification.AddSuccessToastMessage("Cambio de contraseña exitoso.");
                         return RedirectToAction(nameof(Index));
                     }
+                    else
+                    {
+                        _toastNotification.AddErrorToastMessage("Error al realizar el cambio de contraseña.");
+                    }
                 }
+                else
+                {
+                    _toastNotification.AddWarningToastMessage("No se pudo obtener la información correspondiente del usuario.");
+                }
+            }
+            else
+            {
+                _toastNotification.AddWarningToastMessage("El usuario ingresado no existe.");
             }
             return View(user);
         }
-
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var user = await Functions.APIService.GetUserbyID(id);
+            ViewBag.Genero = (user.Genero == true) ? "Masculino" : "Femenino";
+            return View(user);
         }
-
-        
-        
-        
-        
-        
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var user = await Functions.APIService.GetUserbyID(id);
+            ViewBag.Genero = (user.Genero == true) ? "Masculino" : "Femenino";
+            return View(user);
         }
-
-        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Users == null)
-            {
-                return Problem("Entity set 'ProgramacionWebContext.Users'  is null.");
+            var user = await Functions.APIService.GetUserbyID(id);
+            user.StatusId = 2;
+            if (await Functions.APIService.DisableUser(user)) {
+                _toastNotification.AddSuccessToastMessage("Usuario deshabilitado exitosamente.");
+                return RedirectToAction(nameof(Index));
             }
-            var user = await _context.Users.FindAsync(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            _toastNotification.AddErrorToastMessage("Error al deshabilitar usuario.");
+            return RedirectToAction("Delete", "Users", new {@ID = id});
         }
     }
 }

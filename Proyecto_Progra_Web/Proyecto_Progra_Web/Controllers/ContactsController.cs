@@ -21,11 +21,9 @@ namespace Proyecto_Progra_Web.Controllers
         // GET: Contacts
         public async Task<IActionResult> Index()
         {
-           
             return View();
         }
 
-        // GET: Contacts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             
@@ -36,10 +34,20 @@ namespace Proyecto_Progra_Web.Controllers
         public async Task<IActionResult> Create(int ID)
         {
             ViewBag.ID = ID;
+            //obtener información del usuario principal
             var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(ID) };
             ViewData["PrimerUserId"] = new SelectList(alternateList, "Id","Username");
+            //obtener información del cada usuario activo
             var allUsers = await Functions.APIService.GetAllUsers();
-            ViewData["SegundoUserId"] = new SelectList(allUsers, "Id", "Username");
+            var allActiveUsers = new List<User>();
+            foreach (User user in allUsers)
+            {
+                if(user.StatusId == 1)
+                {
+                    allActiveUsers.Add(user);
+                }
+            }
+            ViewData["SegundoUserId"] = new SelectList(allActiveUsers, "Id", "Username");
             return View();
         }
 
@@ -58,9 +66,25 @@ namespace Proyecto_Progra_Web.Controllers
             ViewBag.ID = contact.PrimerUserId;
             var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(contact.PrimerUserId) };
             ViewData["PrimerUserId"] = new SelectList(alternateList, "Id", "Username");
-            ViewData["SegundoUserId"] = new SelectList(await Functions.APIService.GetAllUsers(), "Id", "Username");
+            var allUsers = await Functions.APIService.GetAllUsers();
+            var allActiveUsers = new List<User>();
+            foreach (User user in allUsers)
+            {
+                if (user.StatusId == 1)
+                {
+                    allActiveUsers.Add(user);
+                }
+            }
+            ViewData["SegundoUserId"] = new SelectList(allActiveUsers, "Id", "Username");
             return View(contact);
         }
+
+
+
+
+
+
+
 
         // GET: Contacts/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -79,7 +103,6 @@ namespace Proyecto_Progra_Web.Controllers
             ViewData["SegundoUserId"] = new SelectList(_context.Users, "Id", "Id", contact.SegundoUserId);
             return View(contact);
         }
-
         // POST: Contacts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -116,13 +139,11 @@ namespace Proyecto_Progra_Web.Controllers
             ViewData["SegundoUserId"] = new SelectList(_context.Users, "Id", "Id", contact.SegundoUserId);
             return View(contact);
         }
-
         // GET: Contacts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             return View();
         }
-
         // POST: Contacts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -141,7 +162,6 @@ namespace Proyecto_Progra_Web.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
         private bool ContactExists(int id)
         {
           return (_context.Contacts?.Any(e => e.Id == id)).GetValueOrDefault();

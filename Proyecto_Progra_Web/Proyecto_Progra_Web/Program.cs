@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using Proyecto_Progra_Web.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,11 @@ builder.Services.AddControllersWithViews();
 var connection = builder.Configuration.GetConnectionString("MySQLConnection");
 builder.Services.AddDbContext<ProgramacionWebContext>(options => options.UseMySQL(connection));
 
+builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
+{
+    ProgressBar = true,
+    Timeout = 5000
+});
 
 var app = builder.Build();
 
@@ -29,5 +35,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Users}/{action=Index}/{id?}");
+
+app.UseNToastNotify();
+
+app.MapRazorPages();
 
 app.Run();

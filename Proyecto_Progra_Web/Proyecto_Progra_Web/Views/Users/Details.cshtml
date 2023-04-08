@@ -56,7 +56,7 @@
             @Html.DisplayNameFor(model => model.Genero)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genero)
+            @ViewBag.Genero
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FecTransac)
@@ -68,6 +68,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Delete" asp-controller="Users" asp-route-id="@Model?.Id">Disable User</a> |
+    <a asp-action="Index" asp-controller="Chats" asp-route-id="@Model?.Id">Back to Chat</a>
 </div>

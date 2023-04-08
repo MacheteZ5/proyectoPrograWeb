@@ -95,7 +95,7 @@ namespace Proyecto_Progra_Web.Functions
             var response = await httpClient.PostAsync(url + "Users/CreateUser", content);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return true;
+                return JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
             }
             else
             {
@@ -114,13 +114,34 @@ namespace Proyecto_Progra_Web.Functions
             var response = await httpClient.PutAsync(url + "Users/UpdateUser", content);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return true;
+                return JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
             }
             else
             {
                 return false;
             }
         }
+        public static async System.Threading.Tasks.Task<bool> DisableUser(User user)
+        {
+            var json_ = JsonConvert.SerializeObject(user);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            // Pass the handler to httpclient(from you are calling api)
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PutAsync(url + "Users/DisableUser", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
 
         //Contact Controller
         public static async System.Threading.Tasks.Task<IEnumerable<Contact>> GetContactsList()

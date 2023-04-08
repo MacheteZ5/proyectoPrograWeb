@@ -57,7 +57,7 @@
             @Html.DisplayNameFor(model => model.Genero)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genero)
+            @ViewBag.Genero
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FecTransac)
@@ -71,6 +71,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index" asp-controller="Chats" asp-route-id="@Model?.Id">Back to Chat</a>
     </form>
 </div>
