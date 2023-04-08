@@ -18,7 +18,6 @@ namespace Proyecto_Progra_Web.Controllers
             _context = context;
         }
 
-        // GET: Contacts
         public async Task<IActionResult> Index()
         {
             return View();

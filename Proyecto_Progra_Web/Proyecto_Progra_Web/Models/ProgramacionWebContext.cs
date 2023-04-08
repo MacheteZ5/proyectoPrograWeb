@@ -24,9 +24,16 @@ public partial class ProgramacionWebContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySQL("server=127.0.0.1;userid=jose;password=Zerafina5H;database=programacion_web;TreatTinyAsBoolean=False");
-
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json").Build();
+            var connectionString = configuration.GetConnectionString("MySQLConnection");
+            optionsBuilder.UseMySQL(connectionString);
+        }
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>
@@ -51,10 +58,10 @@ public partial class ProgramacionWebContext : DbContext
                 .HasColumnName("mensaje");
             entity.Property(e => e.UserSend).HasColumnName("userSend");
 
-           /* entity.HasOne(d => d.Contact).WithMany(p => p.Chats)
+           entity.HasOne(d => d.Contact).WithMany(p => p.Chats)
                 .HasForeignKey(d => d.ContactId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ContactID");*/
+                .HasConstraintName("FK_ContactID");
         });
 
         modelBuilder.Entity<Contact>(entity =>

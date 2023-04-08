@@ -13,9 +13,9 @@ public partial class Contact
 
     public DateTime? FecTransac { get; set; }
 
-    /*public virtual ICollection<Chat> Chats { get; } = new List<Chat>();
+    public virtual ICollection<Chat> Chats { get; } = new List<Chat>();
 
-    public virtual User PrimerUser { get; set; } = null!;
+    /*public virtual User PrimerUser { get; set; } = null!;
 
     public virtual User SegundoUser { get; set; } = null!;*/
 }

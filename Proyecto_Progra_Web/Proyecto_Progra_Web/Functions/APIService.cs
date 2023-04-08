@@ -171,7 +171,7 @@ namespace Proyecto_Progra_Web.Functions
             var response = await httpClient.PostAsync(url + "Contacts/SetContact", content);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                throw new Exception(response.StatusCode.ToString());
+                return JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
             }
             else
             {
