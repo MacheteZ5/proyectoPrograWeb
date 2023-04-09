@@ -1,0 +1,42 @@
+﻿@model PPW.Models.Chat
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container">
+    <div class="row p-1" hidden>
+        <div class="col-1">ContactId</div>
+        <div class="col-5"><p type="text" id="contactIdInput" value="@ViewBag.ContactID">@ViewBag.ContactID</p></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">User</div>
+        <div class="col-5"><p type="text" id="userInput" value="@ViewBag.Username">@ViewBag.Username</p></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">Message</div>
+        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Return" asp-route-id="@ViewBag.ID">Back to Contacts</a>
+</div>
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
