@@ -34,14 +34,31 @@ namespace PPW.Controllers
             //obtener información del cada usuario activo
             var allUsers = await Functions.APIService.GetAllUsers();
             var allActiveUsers = new List<User>();
+            var allAvailableUsers = new List<User>();
             foreach (User user in allUsers)
             {
                 if (user.StatusId == 1)
                 {
-                    allActiveUsers.Add(user);
+                    if(user.Id != ID)
+                    {
+                        allActiveUsers.Add(user);
+                    }
                 }
             }
-            ViewData["SegundoUserId"] = new SelectList(allActiveUsers, "Id", "Username");
+            foreach(User user in allActiveUsers)
+            {
+                var contact = new Contact()
+                {
+                    PuserId = user.Id,
+                    SuserId = ID
+                };
+                var contactInfo = await Functions.APIService.GetContact(contact);
+                if(contactInfo == null)
+                {
+                    allAvailableUsers.Add(user);
+                }
+            }
+            ViewData["SegundoUserId"] = new SelectList(allAvailableUsers, "Id", "Username");
             return View();
         }
         [HttpPost]
