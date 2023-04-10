@@ -149,5 +149,13 @@ namespace PPW.Controllers
             _toastNotification.AddErrorToastMessage("Error al deshabilitar usuario.");
             return RedirectToAction("Delete", "Users", new { @ID = id });
         }
+
+        public async Task<JsonResult> GetUserJson()
+        {
+            var userId = Convert.ToInt32(HttpContext.Request.Form["UserId"].FirstOrDefault().ToString());
+            var user = await Functions.APIService.GetUserbyID(userId);
+            var jsonresult = new { user = user };
+            return Json(jsonresult);
+        }
     }
 }

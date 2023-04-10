@@ -43,6 +43,7 @@ namespace PPW.Controllers
                     }
                 }
             }
+            ViewBag.SID = new SelectList(listaNombreContactos, "Id", "Username");
             return View(listaNombreContactos.ToList());
         }
         public async Task<IActionResult> Details(int? id)
