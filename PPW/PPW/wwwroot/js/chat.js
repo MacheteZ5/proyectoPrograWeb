@@ -11,6 +11,8 @@ connection.on("ReceiveMessage", function (user, message) {
 });
 
 connection.start().then(function () {
+    var contactId = document.getElementById("contactIdInput").innerHTML;
+    connection.invoke("AddToGroup", contactId );
     document.getElementById("sendButton").disabled = false;
 }).catch(function (err) {
     return console.error(err.toString());

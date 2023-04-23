@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NToastNotify;
 using PPW.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -149,5 +153,7 @@ namespace PPW.Controllers
             _toastNotification.AddErrorToastMessage("Error al deshabilitar usuario.");
             return RedirectToAction("Delete", "Users", new { @ID = id });
         }
+
+        
     }
 }

@@ -9,7 +9,7 @@ namespace PPW.Hubs
         public async Task SendMessage(string user, string message, string contactId)
         {
             //await Clients.All.SendAsync("ReceiveMessage", user, message); 
-            await Groups.AddToGroupAsync(Context.ConnectionId, contactId);
+            //await Groups.AddToGroupAsync(Context.ConnectionId, contactId);
             var userInfo = await APIService.GetUser(user);
             var chat = new Chat()
             {
