@@ -67,14 +67,16 @@ namespace PPW.Functions
                 return null;
             }
         }
-        public static async System.Threading.Tasks.Task<IEnumerable<User>> GetAllUsers()
+        public static async System.Threading.Tasks.Task<IEnumerable<User>> GetAllUsers(int ID)
         {
+            var json_ = JsonConvert.SerializeObject(ID);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
             // Pass the handler to httpclient(from you are calling api)
             HttpClient httpClient = new HttpClient(clientHandler);
             httpClient.Timeout = TimeSpan.FromSeconds(timeout);
-            var response = await httpClient.GetAsync(url + "Users/GetAllUsers");
+            var response = await httpClient.PostAsync(url + "Users/GetAllUsers",content);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<IEnumerable<User>>(await response.Content.ReadAsStringAsync());
@@ -158,6 +160,26 @@ namespace PPW.Functions
                 throw new Exception(response.StatusCode.ToString());
             }
         }
+        public static async System.Threading.Tasks.Task<IEnumerable<Contact>> GetContactList(int contact)
+        {
+            var json_ = JsonConvert.SerializeObject(contact);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PostAsync(url + "Contacts/GetContactList", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<IEnumerable<Contact>>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
         public static async System.Threading.Tasks.Task<Contact> GetContact(Contact contact)
         {
             var json_ = JsonConvert.SerializeObject(contact);
@@ -233,6 +255,26 @@ namespace PPW.Functions
         }
 
         //Chat Controller
+
+        public static async System.Threading.Tasks.Task<IEnumerable<Chat>> GetChat(int contactId)
+        {
+            var json_ = JsonConvert.SerializeObject(contactId);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PostAsync(url + "Chats/GetChat", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<IEnumerable<Chat>>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static async System.Threading.Tasks.Task<bool> SetChat(Chat chat)
         {
             var json_ = JsonConvert.SerializeObject(chat);

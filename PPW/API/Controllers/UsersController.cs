@@ -82,27 +82,35 @@ namespace API.Controllers
         }
 
         [Route("GetAllUsers")]
-        [HttpGet]
-        public async Task<IEnumerable<PPW.Models.User>> GetAllUsers()
+        [HttpPost]
+        public async Task<IEnumerable<PPW.Models.User>> GetAllUsers([FromBody] int ID)
         {
             _context = new PPW.Models.ProgramacionWebContext();
-            var user = await _context.Users.Select(s =>
-            new PPW.Models.User
+            var activeUsers = new List<PPW.Models.User>();
+            try
             {
-                Id = s.Id,
-                Username = s.Username,
-                Password = s.Password,
-                StatusId = s.StatusId,
-                FirstName = s.FirstName,
-                LastName = s.LastName,
-                Phone = s.Phone,
-                Birthdate = s.Birthdate,
-                Email = s.Email,
-                Genero = s.Genero,
-                FecTransac = s.FecTransac
+                activeUsers = (from m in _context.Users
+                                where m.StatusId == 1 && m.Id != ID
+                                select new PPW.Models.User
+                                {
+                                    Id = m.Id,
+                                    Username = m.Username,
+                                    Password = m.Password,
+                                    StatusId = m.StatusId,
+                                    FirstName = m.FirstName,
+                                    LastName = m.LastName,
+                                    Phone = m.Phone,
+                                    Birthdate = m.Birthdate,
+                                    Email = m.Email,
+                                    Genero = m.Genero,
+                                    FecTransac = m.FecTransac
+                                }).ToList();
             }
-            ).ToListAsync();
-            return user;
+            catch (Exception ex)
+            {
+                activeUsers = null;
+            }
+            return activeUsers;
         }
 
         [Route("CreateUser")]

@@ -26,6 +26,30 @@ namespace API.Controllers
             return contacts;
         }
 
+        [Route("GetContactList")]
+        [HttpPost]
+        public IEnumerable<PPW.Models.Contact> GetContactList([FromBody] int contact)
+        {
+            _context = new PPW.Models.ProgramacionWebContext();
+            var contactList = new List<PPW.Models.Contact>();
+            try
+            {
+                contactList = (from c in _context.Contacts
+                               where (c.PuserId == contact || c.SuserId == contact)
+                               select new PPW.Models.Contact
+                               {
+                                   Id = c.Id,
+                                   PuserId = c.PuserId,
+                                   SuserId = c.SuserId
+                               }).ToList();
+            }
+            catch (Exception ex)
+            {
+                contactList = null;
+            }
+            return contactList;
+        }
+
         [Route("GetContact")]
         [HttpPost]
         public async Task<PPW.Models.Contact> GetContact([FromBody] PPW.Models.Contact contact)

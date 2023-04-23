@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using PPW.Models;
-using PPW.Functions;
+using MySqlX.XDevAPI;
+using Proyecto_Progra_Web.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace PPW.Hubs
+namespace Proyecto_Progra_Web.Hubs
 {
     public class ChatHub:Hub
     {
@@ -10,16 +11,18 @@ namespace PPW.Hubs
         {
             //await Clients.All.SendAsync("ReceiveMessage", user, message); 
             await Groups.AddToGroupAsync(Context.ConnectionId, contactId);
-            var userInfo = await APIService.GetUser(user);
+            await Clients.Group(contactId).SendAsync("ReceiveMessage", user, message);
+            var userInfo = await Functions.APIService.GetUser(user);
             var chat = new Chat()
             {
                 ContactId = Convert.ToInt32(contactId),
-                UserId = userInfo.Id,
-                Mensaje = message
+                UserSend = userInfo.Id,
+                Mensaje = message,
+                Contact = await Functions.APIService.GetContactById(Convert.ToInt32(contactId))
             };
-            if (await APIService.SetChat(chat))
+            if (await Functions.APIService.SetChat(chat))
             {
-                await Clients.Group(contactId).SendAsync("ReceiveMessage", user, message);
+
             }
         }
         

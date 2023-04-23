@@ -1,4 +1,4 @@
-﻿@model PPW.Models.Chat
+﻿@model IEnumerable<PPW.Models.Chat>
 
 @{
     ViewData["Title"] = "Create";
@@ -29,6 +29,19 @@
     </div>
     <div class="row p-1">
         <div class="col-6">
+            <ul>
+                @foreach (var item in Model)
+                {
+                    if (item.UserId == @ViewBag.ID)
+                    {
+                        <li> <strong> @ViewBag.Username" </strong> :  @item.Mensaje </li>
+                    }
+                    else
+                    {
+                        <li> <strong> @ViewBag.Contactname" </strong> :  @item.Mensaje </li>
+                    }
+                }
+            </ul>
             <ul id="messagesList"></ul>
         </div>
     </div>

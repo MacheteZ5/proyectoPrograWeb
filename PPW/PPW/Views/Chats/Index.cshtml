@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>@ViewData["Title"] - ClasificacionPeliculas</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
     <link href="~/assets/img/favicon.png" rel="icon">
@@ -31,12 +30,12 @@
                         <i class="bi bi-search"></i>
                     </a>
                 </li><!-- End Search Icon-->
-                <li class="nav-item dropdown pe-3">
+                <!--<li class="nav-item dropdown pe-3">
                     <label for="UserId" class="control-label">User:</label>
                 </li>
                 <li class="pe-3">
-                    <select for="UserId" asp-items="@ViewBag.SID" onchange="UserChanged('@Url.Action("GetUserJson", "User")');"></select>
-                </li>
+                    <select for="UserId" id="UserId" asp-items="@ViewBag.SID" onchange="UserChanged('@Url.Action("GetChatJson", "Chats",new { id = @ViewBag.ID })');"></select>
+                </li>-->
                 <li class="nav-item dropdown pe-3">
                     <a asp-action="Create" asp-controller="Contacts" asp-route-id="@ViewBag.ID" class="nav-link nav-profile d-flex align-items-center pe-0">
                         <img src="~/assets/img/create.png" alt="Profile" class="rounded-circle">
@@ -86,32 +85,7 @@
             }
         </ul>
     </aside><!-- End Sidebar-->
-    <main id="main" class="main">
-        <section class="section">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                            <div class="card-body">
-                                <dl class="row">
-                                    <dt class="col-sm-2">
-                                        
-                                    </dt>
-                                    <dd class="col-sm-10">
-                                        <input for="Movie.ReleaseDate" class="form-control" readonly />
-                                    </dd>
-
-                                </dl>
-                            </div>
-                            <div class="card-footer">
-                                <input type="submit" value="Crear" class="btn btn-primary" />
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        </section>
-
-    </main><!-- End #main -->
+  
 
     <!-- ======= Footer ======= -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

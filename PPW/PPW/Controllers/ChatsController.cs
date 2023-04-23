@@ -43,12 +43,8 @@ namespace PPW.Controllers
                     }
                 }
             }
-            ViewBag.SID = new SelectList(listaNombreContactos, "Id", "Username");
+            //ViewBag.SID = new SelectList(listaNombreContactos, "Id", "Username");
             return View(listaNombreContactos.ToList());
-        }
-        public async Task<IActionResult> Details(int? id)
-        {
-            return View();
         }
         public async Task<IActionResult> Create(int Id, int Contact)
         {
@@ -58,9 +54,12 @@ namespace PPW.Controllers
             {
                 ViewBag.ContactID = contactInfo.Id;
                 var user = await Functions.APIService.GetUserbyID(Id);
+                var sUser = await Functions.APIService.GetUserbyID(Contact);
                 ViewBag.Username = user.Username;
+                ViewBag.Contactname = sUser.Username;
                 ViewBag.ID = Id;
-                return View();
+                var chats = await Functions.APIService.GetChat(contactInfo.Id);
+                return View(chats.ToList());
             }
             return RedirectToAction("Index", "Chats", Id);
         }
@@ -69,32 +68,23 @@ namespace PPW.Controllers
             return RedirectToAction("Index", "Chats", new { @ID = id });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ContactId,UserId,Mensaje,Archivos,FecTransac")] Chat chat)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(chat);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(chat);
-        }
 
-        // GET: Chats/Edit/5
+
+
+
+
+
+
         public async Task<IActionResult> Edit(int? id)
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ContactId,UserId,Mensaje,Archivos,FecTransac")] Chat chat)
         {
             return View(chat);
         }
-
         // GET: Chats/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -112,7 +102,6 @@ namespace PPW.Controllers
 
             return View(chat);
         }
-
         // POST: Chats/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -127,14 +116,13 @@ namespace PPW.Controllers
             {
                 _context.Chats.Remove(chat);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
         private bool ChatExists(int id)
         {
-          return (_context.Chats?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Chats?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
