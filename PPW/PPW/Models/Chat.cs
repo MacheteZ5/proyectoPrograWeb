@@ -13,7 +13,7 @@ public partial class Chat
 
     public string? Mensaje { get; set; }
 
-    public string? Archivos { get; set; }
+    //public string? Archivos { get; set; }
 
     public DateTime? FecTransac { get; set; }
 

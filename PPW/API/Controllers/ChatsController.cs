@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PPW.Models;
 
 namespace API.Controllers
@@ -9,9 +11,10 @@ namespace API.Controllers
     {
         private PPW.Models.ProgramacionWebContext _context;
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetChat")]
         [HttpPost]
-        public async Task<IEnumerable<PPW.Models.Chat>> GetChat([FromBody] int contadtId)
+        public IEnumerable<PPW.Models.Chat> GetChat([FromBody] int contadtId)
         {
             _context = new PPW.Models.ProgramacionWebContext();
             var chatMessages = new List<PPW.Models.Chat>();
@@ -23,7 +26,8 @@ namespace API.Controllers
                                     Id = m.ContactId,
                                     ContactId = m.ContactId,
                                     Mensaje = m.Mensaje,
-                                    UserId = m.UserId
+                                    UserId = m.UserId,
+                                    FecTransac  = m.FecTransac
                                 }).ToList();
             }
             catch (Exception ex)
@@ -33,6 +37,7 @@ namespace API.Controllers
             return chatMessages;
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("SetChat")]
         [HttpPost]
         public async Task<bool> SetChat([FromBody] PPW.Models.Chat chat)

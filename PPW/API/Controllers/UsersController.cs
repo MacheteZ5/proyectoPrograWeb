@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,13 +13,6 @@ namespace API.Controllers
     [Route("[controller]")]
     public class UsersController : Controller
     {
-        private readonly IConfiguration configuration;
-
-        public UsersController(IConfiguration _configuration)
-        {
-            configuration = _configuration;
-        }
-
         private PPW.Models.ProgramacionWebContext _context;
 
         [Route("GetValidationUser")]
@@ -163,6 +158,7 @@ namespace API.Controllers
             return result;
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("DisableUser")]
         [HttpPut]
         public async Task<bool> DisableUser([FromBody] PPW.Models.User user)
@@ -181,31 +177,5 @@ namespace API.Controllers
             }
             return result;
         }
-
-        private string CustomTokenJWT(string ApplicationName, DateTime token_expiration)
-        {
-            var _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:SecretKey"]));
-            var _signingCredentials = new SigningCredentials(_symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-            var _Header = new JwtHeader(_signingCredentials);
-            var _Claims = new[] {
-                //acá es lo que debemos de modificar las los parametros que vamos a utilizar.
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.NameId, ApplicationName)
-            };
-            var _Payload = new JwtPayload(
-                    issuer: configuration["JWT:Issuer"],
-                    audience: configuration["JWT:Audience"],
-                    claims: _Claims,
-                    notBefore: DateTime.Now, //cuanto va a durar el token
-                    expires: token_expiration    // cuando va a expirar el token.
-                );
-            var _Token = new JwtSecurityToken(
-                    _Header,
-                    _Payload
-                );
-            return new JwtSecurityTokenHandler().WriteToken(_Token);
-        }
-
-
     }
 }

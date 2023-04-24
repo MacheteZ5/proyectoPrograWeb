@@ -22,7 +22,7 @@ namespace PPW.Controllers
         {
             ViewBag.ID = ID;
             var listaNombreContactos = new List<User>();
-            var lista = await Functions.APIService.GetContactsList();
+            var lista = await Functions.APIService.GetContactsList("");
             foreach (var contact in lista)
             {
                 User user;
@@ -49,7 +49,7 @@ namespace PPW.Controllers
         public async Task<IActionResult> Create(int Id, int Contact)
         {
             var contact = new Contact { PuserId = Id, SuserId = Contact };
-            var contactInfo = await Functions.APIService.GetContact(contact);
+            var contactInfo = await Functions.APIService.GetContact(contact,"");
             if (contactInfo != null)
             {
                 ViewBag.ContactID = contactInfo.Id;
@@ -58,7 +58,7 @@ namespace PPW.Controllers
                 ViewBag.Username = user.Username;
                 ViewBag.Contactname = sUser.Username;
                 ViewBag.ID = Id;
-                var chats = await Functions.APIService.GetChat(contactInfo.Id);
+                var chats = await Functions.APIService.GetChat(contactInfo.Id, "");
                 return View(chats.ToList());
             }
             return RedirectToAction("Index", "Chats", Id);
@@ -67,13 +67,6 @@ namespace PPW.Controllers
         {
             return RedirectToAction("Index", "Chats", new { @ID = id });
         }
-
-
-
-
-
-
-
 
         public async Task<IActionResult> Edit(int? id)
         {

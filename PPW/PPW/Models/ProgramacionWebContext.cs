@@ -47,9 +47,9 @@ public partial class ProgramacionWebContext : DbContext
             entity.HasIndex(e => e.UserId, "FK_UserID");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Archivos)
+            /*entity.Property(e => e.Archivos)
                 .HasMaxLength(8000)
-                .HasColumnName("archivos");
+                .HasColumnName("archivos");*/
             entity.Property(e => e.ContactId).HasColumnName("Contact_ID");
             entity.Property(e => e.FecTransac)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -145,6 +145,5 @@ public partial class ProgramacionWebContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
-
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

@@ -34,7 +34,7 @@ namespace PPW.Controllers
                     PuserId = user.Id,
                     SuserId = ID
                 };
-                var contactInfo = await Functions.APIService.GetContact(contact);
+                var contactInfo = await Functions.APIService.GetContact(contact,"");
                 if(contactInfo == null)
                 {
                     allAvailableUsers.Add(user);
@@ -47,7 +47,7 @@ namespace PPW.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PuserId,SuserId,FecTransac")] Contact contact)
         {
-            if (await Functions.APIService.SetContact(contact))
+            if (await Functions.APIService.SetContact(contact, ""))
             {
                 _toastNotification.AddSuccessToastMessage("Creación de contacto realizado exitosamente.");
                 return RedirectToAction("Index", "Chats", new { @ID = contact.PuserId });
@@ -68,7 +68,7 @@ namespace PPW.Controllers
                     PuserId = user.Id,
                     SuserId = contact.PuserId
                 };
-                var contactInfo = await Functions.APIService.GetContact(aContact);
+                var contactInfo = await Functions.APIService.GetContact(aContact, "");
                 if (contactInfo == null)
                 {
                     allAvailableUsers.Add(user);
@@ -84,7 +84,7 @@ namespace PPW.Controllers
             ViewBag.ID = ID;
             var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(ID) };
             ViewBag.PrimerUserId = new SelectList(alternateList, "Id", "Username");
-            var lista = await Functions.APIService.GetContactList(ID);
+            var lista = await Functions.APIService.GetContactList(ID, "");
             var listaNombreContactos = new List<User>();
             foreach (var contact in lista)
             {
@@ -115,8 +115,8 @@ namespace PPW.Controllers
         public async Task<IActionResult> DeleteConfirmed([Bind("PuserId,SuserId,FecTransac")] Contact contact)
         {
             var id = contact.PuserId;
-            var contactInfo = await Functions.APIService.GetContact(contact);
-            if (await Functions.APIService.DeleteContact(contactInfo))
+            var contactInfo = await Functions.APIService.GetContact(contact,"");
+            if (await Functions.APIService.DeleteContact(contactInfo, ""))
             {
                 return RedirectToAction("Index", "Chats", new { @ID = contact.PuserId });
             }
@@ -127,7 +127,7 @@ namespace PPW.Controllers
             ViewBag.ID = contact.PuserId;
             var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(contact.PuserId) };
             ViewData["PrimerUserId"] = new SelectList(alternateList, "Id", "Username");
-            var lista = await Functions.APIService.GetContactList(contact.PuserId);
+            var lista = await Functions.APIService.GetContactList(contact.PuserId, "");
             var listaNombreContactos = new List<User>();
             foreach (var contacts in lista)
             {

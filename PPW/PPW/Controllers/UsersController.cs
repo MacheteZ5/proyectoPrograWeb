@@ -7,11 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NToastNotify;
 using PPW.Models;
+using System.Net;
+using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace PPW.Controllers
 {
@@ -22,7 +26,7 @@ namespace PPW.Controllers
         {
             _toastNotification = toastNotification;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
@@ -37,8 +41,21 @@ namespace PPW.Controllers
                     var userInformation = await Functions.APIService.GetUser(username);
                     if (userInformation.Password == password)
                     {
-                        _toastNotification.AddSuccessToastMessage("Login realizado exitosamente.");
-                        return RedirectToAction("Index", "Chats", new { @ID = userInformation.Id });
+                        var jwttoken = await Functions.APIService.GetToken(userInformation);
+                        if (jwttoken != null)
+                        {
+                            var key = "coockie";
+                            var value = jwttoken.token;
+                            var myCookie = new CookieOptions();
+                            myCookie.Expires = DateTime.Now.AddDays(1);
+                            Response.Cookies.Append(key, value, myCookie);
+                            _toastNotification.AddSuccessToastMessage("Login realizado exitosamente.");
+                            return RedirectToAction("Index", "Chats", new { @ID = userInformation.Id });
+                        }
+                        else
+                        {
+                            _toastNotification.AddErrorToastMessage("Error durante la generación del Token.");
+                        }
                     }
                     else
                     {
@@ -145,7 +162,7 @@ namespace PPW.Controllers
         {
             var user = await Functions.APIService.GetUserbyID(id);
             user.StatusId = 2;
-            if (await Functions.APIService.DisableUser(user))
+            if (await Functions.APIService.DisableUser(user,""))
             {
                 _toastNotification.AddSuccessToastMessage("Usuario deshabilitado exitosamente.");
                 return RedirectToAction(nameof(Index));

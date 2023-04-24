@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
@@ -9,7 +11,7 @@ namespace API.Controllers
     public class ContactsController : Controller
     {
         private PPW.Models.ProgramacionWebContext _context;
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetAllContacts")]
         [HttpGet]
         public async Task<IEnumerable<PPW.Models.Contact>> GetContactsList()
@@ -25,7 +27,7 @@ namespace API.Controllers
             ).ToListAsync();
             return contacts;
         }
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetContactList")]
         [HttpPost]
         public IEnumerable<PPW.Models.Contact> GetContactList([FromBody] int contact)
@@ -49,7 +51,7 @@ namespace API.Controllers
             }
             return contactList;
         }
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetContact")]
         [HttpPost]
         public async Task<PPW.Models.Contact> GetContact([FromBody] PPW.Models.Contact contact)
@@ -66,7 +68,7 @@ namespace API.Controllers
             ).FirstOrDefaultAsync(s => (s.PuserId == contact.PuserId || s.PuserId == contact.SuserId) && (s.SuserId == contact.PuserId || s.SuserId == contact.SuserId));
             return contactInfo;
         }
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetContactById")]
         [HttpPost]
         public async Task<PPW.Models.Contact> GetContactById([FromBody] int contactId)
@@ -83,7 +85,7 @@ namespace API.Controllers
             ).FirstOrDefaultAsync(s => s.Id == contactId);
             return contact;
         }
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("SetContact")]
         [HttpPost]
         public async Task<bool> SetContact([FromBody] PPW.Models.Contact contact)
@@ -103,7 +105,7 @@ namespace API.Controllers
             }
             return result;
         }
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("DeleteContact")]
         [HttpPost]
         public async Task<bool> DeleteContact([FromBody] PPW.Models.Contact contact)

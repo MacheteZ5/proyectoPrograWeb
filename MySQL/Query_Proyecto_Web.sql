@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTs User(
     LastName varchar (100) not null,  
 	Phone varchar(20) not null,
     Birthdate date not null,
-    Email varchar(30) not null,
+    Email varchar(50) not null,
     Genero bit not null,
     fec_transac datetime DEFAULT CURRENT_TIMESTAMP,
     primary key (ID)
@@ -31,17 +31,16 @@ CREATE TABLE IF NOT EXISTs User(
 CREATE TABLE IF NOT EXISTs Chat(  
     ID int NOT NULL AUTO_INCREMENT,  
 	Contact_ID int Not null,
-    userSend int null,
+	User_ID int null,
     mensaje varchar(8000) null,
-	archivos varchar(8000) null,
     fec_transac datetime DEFAULT CURRENT_TIMESTAMP,
     primary key (ID)
 );
 /*ENTIDAD 4: CONTACTOS, contiene toda la información*/
 CREATE TABLE IF NOT EXISTS Contact(
 	ID int NOT NULL AUTO_INCREMENT,  
-	PUserId int not null,  
-    SUserId int not null,
+	PUser_Id int not null,  
+    SUser_Id int not null,
 	fec_transac datetime DEFAULT CURRENT_TIMESTAMP,
     primary key (ID)
 );
@@ -50,14 +49,12 @@ CREATE TABLE IF NOT EXISTS Contact(
 /*ALTERS: PREFERIBLEMENTE REALIZAR LOS FOREING KEYS HASTA EL FINAL, TRAS HABER REALIZADO LA CREACIÓN DE LAS TABLAS*/
 ALTER TABLE User ADD CONSTRAINT FK_StatusID FOREIGN KEY (Status_ID) REFERENCES Status(ID);
 
-ALTER TABLE Contact ADD CONSTRAINT FK_PPersonID FOREIGN KEY (PrimerUserId) REFERENCES User(ID);
-ALTER TABLE Contact ADD CONSTRAINT FK_SPersonID FOREIGN KEY (SegundoUserId) REFERENCES User(ID);
-
-ALTER TABLE Contact DISABLE KEYS;
-ALTER TABLE Contact ENABLE KEYS;
+ALTER TABLE Contact ADD CONSTRAINT FK_PPersonID FOREIGN KEY (PUser_Id) REFERENCES User(ID);
+ALTER TABLE Contact ADD CONSTRAINT FK_SPersonID FOREIGN KEY (SUser_Id) REFERENCES User(ID);
 
 
 ALTER TABLE Chat ADD CONSTRAINT FK_ContactID FOREIGN KEY (Contact_ID) REFERENCES Contact(ID);
+ALTER TABLE Chat ADD CONSTRAINT FK_UserID FOREIGN KEY (User_ID) REFERENCES User(ID);
 
 
 /*Inserción 1: A la tabla Status, para indicar cuales son los estatus que puede contener*/
@@ -76,4 +73,6 @@ Drop Table if exists Chat;
 Drop Table if exists User;
 Drop Table if exists status;
 
+ALTER TABLE Contact DISABLE KEYS;
+ALTER TABLE Contact ENABLE KEYS;
 */
