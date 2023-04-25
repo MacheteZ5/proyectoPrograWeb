@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +19,13 @@ namespace PPW.Controllers
             _context = context;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index(int ID)
         {
+            var token = User.Claims.FirstOrDefault(s=> s.Type == "TokenAPI")?.Value;
             ViewBag.ID = ID;
             var listaNombreContactos = new List<User>();
-            var lista = await Functions.APIService.GetContactsList("");
+            var lista = await Functions.APIService.GetContactsList(token);
             foreach (var contact in lista)
             {
                 User user;

@@ -15,7 +15,8 @@ using PPW.Models;
 using System.Net;
 using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace PPW.Controllers
 {
@@ -44,11 +45,23 @@ namespace PPW.Controllers
                         var jwttoken = await Functions.APIService.GetToken(userInformation);
                         if (jwttoken != null)
                         {
+                            var claims = new List<Claim>
+                            {
+                                new Claim("username", username),
+                                new Claim("TokenAPI", jwttoken.token),
+                                new Claim("DateTimeExpirationTokenAPI", jwttoken.expirationTime.ToString())
+                            };
+                            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                            await HttpContext.SignInAsync(claimsPrincipal);
+
+                            /*#region coockiepropia
                             var key = "coockie";
                             var value = jwttoken.token;
                             var myCookie = new CookieOptions();
                             myCookie.Expires = DateTime.Now.AddDays(1);
                             Response.Cookies.Append(key, value, myCookie);
+                            #endregion coockiepropia*/
                             _toastNotification.AddSuccessToastMessage("Login realizado exitosamente.");
                             return RedirectToAction("Index", "Chats", new { @ID = userInformation.Id });
                         }

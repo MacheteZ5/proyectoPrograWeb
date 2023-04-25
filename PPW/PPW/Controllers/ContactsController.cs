@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,8 @@ namespace PPW.Controllers
         {
             _toastNotification = toastNotification;
         }
+        
+        [Authorize]
         public async Task<IActionResult> Create(int ID)
         {
             _toastNotification.AddInfoToastMessage("Seleccione el usuario que desea guardar como contacto.");
@@ -77,7 +80,7 @@ namespace PPW.Controllers
             ViewData["SegundoUserId"] = new SelectList(allAvailableUsers, "Id", "Username");
             return View(contact);
         }
-        
+        [Authorize]
         public async Task<IActionResult> Delete(int ID)
         {
             _toastNotification.AddInfoToastMessage("Seleccione el usuario que desea eliminar de sus contactos.");
@@ -109,7 +112,6 @@ namespace PPW.Controllers
             ViewData["SegundoUserId"] = new SelectList(listaNombreContactos, "Id", "Username");
             return View();
         }
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed([Bind("PuserId,SuserId,FecTransac")] Contact contact)
