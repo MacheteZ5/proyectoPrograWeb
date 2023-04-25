@@ -22,6 +22,7 @@ namespace PPW.Controllers
         [Authorize]
         public async Task<IActionResult> Create(int ID)
         {
+            var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
             _toastNotification.AddInfoToastMessage("Seleccione el usuario que desea guardar como contacto.");
             //obtener información del usuario principal
             ViewBag.ID = ID;
@@ -37,7 +38,7 @@ namespace PPW.Controllers
                     PuserId = user.Id,
                     SuserId = ID
                 };
-                var contactInfo = await Functions.APIService.GetContact(contact,"");
+                var contactInfo = await Functions.APIService.GetContact(contact,token);
                 if(contactInfo == null)
                 {
                     allAvailableUsers.Add(user);
@@ -50,7 +51,8 @@ namespace PPW.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PuserId,SuserId,FecTransac")] Contact contact)
         {
-            if (await Functions.APIService.SetContact(contact, ""))
+            var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
+            if (await Functions.APIService.SetContact(contact, token))
             {
                 _toastNotification.AddSuccessToastMessage("Creación de contacto realizado exitosamente.");
                 return RedirectToAction("Index", "Chats", new { @ID = contact.PuserId });
@@ -71,7 +73,7 @@ namespace PPW.Controllers
                     PuserId = user.Id,
                     SuserId = contact.PuserId
                 };
-                var contactInfo = await Functions.APIService.GetContact(aContact, "");
+                var contactInfo = await Functions.APIService.GetContact(aContact, token);
                 if (contactInfo == null)
                 {
                     allAvailableUsers.Add(user);
@@ -83,11 +85,12 @@ namespace PPW.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int ID)
         {
+            var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
             _toastNotification.AddInfoToastMessage("Seleccione el usuario que desea eliminar de sus contactos.");
             ViewBag.ID = ID;
             var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(ID) };
             ViewBag.PrimerUserId = new SelectList(alternateList, "Id", "Username");
-            var lista = await Functions.APIService.GetContactList(ID, "");
+            var lista = await Functions.APIService.GetContactList(ID, token);
             var listaNombreContactos = new List<User>();
             foreach (var contact in lista)
             {
@@ -116,9 +119,10 @@ namespace PPW.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed([Bind("PuserId,SuserId,FecTransac")] Contact contact)
         {
+            var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
             var id = contact.PuserId;
-            var contactInfo = await Functions.APIService.GetContact(contact,"");
-            if (await Functions.APIService.DeleteContact(contactInfo, ""))
+            var contactInfo = await Functions.APIService.GetContact(contact,token);
+            if (await Functions.APIService.DeleteContact(contactInfo, token))
             {
                 return RedirectToAction("Index", "Chats", new { @ID = contact.PuserId });
             }
@@ -129,7 +133,7 @@ namespace PPW.Controllers
             ViewBag.ID = contact.PuserId;
             var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(contact.PuserId) };
             ViewData["PrimerUserId"] = new SelectList(alternateList, "Id", "Username");
-            var lista = await Functions.APIService.GetContactList(contact.PuserId, "");
+            var lista = await Functions.APIService.GetContactList(contact.PuserId, token);
             var listaNombreContactos = new List<User>();
             foreach (var contacts in lista)
             {

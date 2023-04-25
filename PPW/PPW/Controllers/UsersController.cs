@@ -173,9 +173,10 @@ namespace PPW.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
             var user = await Functions.APIService.GetUserbyID(id);
             user.StatusId = 2;
-            if (await Functions.APIService.DisableUser(user,""))
+            if (await Functions.APIService.DisableUser(user,token))
             {
                 _toastNotification.AddSuccessToastMessage("Usuario deshabilitado exitosamente.");
                 return RedirectToAction(nameof(Index));
