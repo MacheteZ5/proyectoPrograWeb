@@ -32,7 +32,8 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     var user = document.getElementById("userInput").innerHTML;
     var message = document.getElementById("messageInput").value;
     var contactId = document.getElementById("contactIdInput").innerHTML;
-    connection.invoke("SendMessage", user, message, contactId).catch(function (err) {
+    var token = document.getElementById("Token").innerHTML;
+    connection.invoke("SendMessage", user, message, contactId, token).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

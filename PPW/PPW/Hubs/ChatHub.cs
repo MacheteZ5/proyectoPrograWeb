@@ -6,7 +6,7 @@ namespace PPW.Hubs
 {
     public class ChatHub:Hub
     {
-        public async Task SendMessage(string user, string message, string contactId)
+        public async Task SendMessage(string user, string message, string contactId, string token)
         {
             if(message!="")
             {
@@ -17,7 +17,7 @@ namespace PPW.Hubs
                     UserId = userInfo.Id,
                     Mensaje = message
                 };
-                if (await APIService.SetChat(chat, ""))
+                if (await APIService.SetChat(chat, token))
                 {
                     await Clients.Group(contactId).SendAsync("ReceiveMessage", user, message);
                 }
