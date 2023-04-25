@@ -49,10 +49,12 @@ namespace PPW.Controllers
             //ViewBag.SID = new SelectList(listaNombreContactos, "Id", "Username");
             return View(listaNombreContactos.ToList());
         }
+        [Authorize]
         public async Task<IActionResult> Create(int Id, int Contact)
         {
+            var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
             var contact = new Contact { PuserId = Id, SuserId = Contact };
-            var contactInfo = await Functions.APIService.GetContact(contact,"");
+            var contactInfo = await Functions.APIService.GetContact(contact, token);
             if (contactInfo != null)
             {
                 ViewBag.ContactID = contactInfo.Id;
@@ -61,7 +63,7 @@ namespace PPW.Controllers
                 ViewBag.Username = user.Username;
                 ViewBag.Contactname = sUser.Username;
                 ViewBag.ID = Id;
-                var chats = await Functions.APIService.GetChat(contactInfo.Id, "");
+                var chats = await Functions.APIService.GetChat(contactInfo.Id, token);
                 return View(chats.ToList());
             }
             return RedirectToAction("Index", "Chats", Id);
