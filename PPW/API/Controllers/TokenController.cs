@@ -18,9 +18,9 @@ namespace API.Controllers
 
         [Route("GetToken")]
         [HttpPost]
-        public PPW.Models.Token GetToken([FromBody] PPW.Models.User user)
+        public Modelos.Token GetToken([FromBody] Modelos.User user)
         {
-            var token = new PPW.Models.Token();
+            var token = new Modelos.Token();
             var applicationName = user.Username;
             var expirationDateTime = DateTime.Now.AddMinutes(30);
             token.token = CustomTokenJWT(applicationName, expirationDateTime);

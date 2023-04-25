@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using API.Models;
 
 namespace API.Controllers
 {
@@ -13,15 +14,15 @@ namespace API.Controllers
     [Route("[controller]")]
     public class UsersController : Controller
     {
-        private PPW.Models.ProgramacionWebContext _context;
+        private ProgramacionWebContext _context;
 
         [Route("GetValidationUser")]
         [HttpPost]
         public async Task<bool> GetValidationUser([FromBody] string UserName)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             var user = await _context.Users.Select(s =>
-            new PPW.Models.User
+            new Modelos.User
             {
                 Id = s.Id,
                 Username = s.Username,
@@ -41,11 +42,11 @@ namespace API.Controllers
 
         [Route("GetUser")]
         [HttpPost]
-        public async Task<PPW.Models.User> GetUser([FromBody] string userName)
+        public async Task<Modelos.User> GetUser([FromBody] string userName)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             var user = await _context.Users.Select(s =>
-            new PPW.Models.User
+            new Modelos.User
             {
                 Id = s.Id,
                 Username = s.Username,
@@ -65,11 +66,11 @@ namespace API.Controllers
 
         [Route("GetUserbyID")]
         [HttpPost]
-        public async Task<PPW.Models.User> GetUserbyID([FromBody] int ID)
+        public async Task<Modelos.User> GetUserbyID([FromBody] int ID)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             var user = await _context.Users.Select(s =>
-            new PPW.Models.User
+            new Modelos.User
             {
                 Id = s.Id,
                 Username = s.Username,
@@ -89,15 +90,15 @@ namespace API.Controllers
 
         [Route("GetAllUsers")]
         [HttpPost]
-        public async Task<IEnumerable<PPW.Models.User>> GetAllUsers([FromBody] int ID)
+        public async Task<IEnumerable<Modelos.User>> GetAllUsers([FromBody] int ID)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
-            var activeUsers = new List<PPW.Models.User>();
+            _context = new ProgramacionWebContext();
+            var activeUsers = new List<Modelos.User>();
             try
             {
                 activeUsers = (from m in _context.Users
                                 where m.StatusId == 1 && m.Id != ID
-                                select new PPW.Models.User
+                                select new Modelos.User
                                 {
                                     Id = m.Id,
                                     Username = m.Username,
@@ -121,9 +122,9 @@ namespace API.Controllers
 
         [Route("CreateUser")]
         [HttpPost]
-        public async Task<bool> CreateUser([FromBody] PPW.Models.User user)
+        public async Task<bool> CreateUser([FromBody] Modelos.User user)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             bool result;
             try
             {
@@ -141,9 +142,9 @@ namespace API.Controllers
 
         [Route("UpdateUser")]
         [HttpPut]
-        public async Task<bool> UpdateUser([FromBody] PPW.Models.User user)
+        public async Task<bool> UpdateUser([FromBody] Modelos.User user)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             bool result;
             try
             {
@@ -161,9 +162,9 @@ namespace API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("DisableUser")]
         [HttpPut]
-        public async Task<bool> DisableUser([FromBody] PPW.Models.User user)
+        public async Task<bool> DisableUser([FromBody] Modelos.User user)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             bool result;
             try
             {

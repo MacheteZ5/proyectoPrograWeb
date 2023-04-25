@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using API.Models;
 
 namespace API.Controllers
 {
@@ -10,15 +11,15 @@ namespace API.Controllers
     [Route("[controller]")]
     public class ContactsController : Controller
     {
-        private PPW.Models.ProgramacionWebContext _context;
+        private ProgramacionWebContext _context;
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetAllContacts")]
         [HttpGet]
-        public async Task<IEnumerable<PPW.Models.Contact>> GetContactsList()
+        public async Task<IEnumerable<Modelos.Contact>> GetContactsList()
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             var contacts = await _context.Contacts.Select(s =>
-            new PPW.Models.Contact
+            new Modelos.Contact
             {
                 Id = s.Id,
                 PuserId = s.PuserId,
@@ -30,15 +31,15 @@ namespace API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetContactList")]
         [HttpPost]
-        public IEnumerable<PPW.Models.Contact> GetContactList([FromBody] int contact)
+        public IEnumerable<Modelos.Contact> GetContactList([FromBody] int contact)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
-            var contactList = new List<PPW.Models.Contact>();
+            _context = new ProgramacionWebContext();
+            var contactList = new List<Modelos.Contact>();
             try
             {
                 contactList = (from c in _context.Contacts
                                where (c.PuserId == contact || c.SuserId == contact)
-                               select new PPW.Models.Contact
+                               select new Modelos.Contact
                                {
                                    Id = c.Id,
                                    PuserId = c.PuserId,
@@ -54,11 +55,11 @@ namespace API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetContact")]
         [HttpPost]
-        public async Task<PPW.Models.Contact> GetContact([FromBody] PPW.Models.Contact contact)
+        public async Task<Modelos.Contact> GetContact([FromBody] Modelos.Contact contact)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             var contactInfo = await _context.Contacts.Select(s =>
-            new PPW.Models.Contact
+            new Modelos.Contact
             {
                 Id = s.Id,
                 PuserId = s.PuserId,
@@ -71,11 +72,11 @@ namespace API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("GetContactById")]
         [HttpPost]
-        public async Task<PPW.Models.Contact> GetContactById([FromBody] int contactId)
+        public async Task<Modelos.Contact> GetContactById([FromBody] int contactId)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             var contact = await _context.Contacts.Select(s =>
-            new PPW.Models.Contact
+            new Modelos.Contact
             {
                 Id = s.Id,
                 PuserId = s.PuserId,
@@ -88,9 +89,9 @@ namespace API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("SetContact")]
         [HttpPost]
-        public async Task<bool> SetContact([FromBody] PPW.Models.Contact contact)
+        public async Task<bool> SetContact([FromBody] Modelos.Contact contact)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             bool result;
             try
             {
@@ -108,9 +109,9 @@ namespace API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("DeleteContact")]
         [HttpPost]
-        public async Task<bool> DeleteContact([FromBody] PPW.Models.Contact contact)
+        public async Task<bool> DeleteContact([FromBody] Modelos.Contact contact)
         {
-            _context = new PPW.Models.ProgramacionWebContext();
+            _context = new ProgramacionWebContext();
             bool result;
             try
             {
