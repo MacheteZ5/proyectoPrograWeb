@@ -1,0 +1,48 @@
+﻿@model IEnumerable<PPW.Models.Chat>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Mensaje)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FecTransac)
+            </th>
+            <th>
+                UserName
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mensaje)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FecTransac)
+                </td>
+                <td>
+                    @if(item.UserId == @ViewBag.ID)
+                    {
+                        @ViewBag.Username
+                    }
+                    else
+                    {
+                        @ViewBag.Contactname
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" asp-route-userID="@ViewBag.ID" asp-route-contact="@ViewBag.ContactID">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" asp-route-userID="@ViewBag.ID" asp-route-contact="@ViewBag.ContactID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="Create" asp-controller="Chats" asp-route-contact="@ViewBag.ContactID" asp-route-id="@ViewBag.ID">Back to Chat</a>
+</div>

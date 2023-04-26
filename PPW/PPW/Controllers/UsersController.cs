@@ -17,6 +17,7 @@ using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PPW.Controllers
 {
@@ -163,6 +164,7 @@ namespace PPW.Controllers
             }
             return View(user);
         }
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await Functions.APIService.GetUserbyID(id);
@@ -184,7 +186,11 @@ namespace PPW.Controllers
             _toastNotification.AddErrorToastMessage("Error al deshabilitar usuario.");
             return RedirectToAction("Delete", "Users", new { @ID = id });
         }
-
-        
+        [Authorize]
+        public async Task<IActionResult> SignOut()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

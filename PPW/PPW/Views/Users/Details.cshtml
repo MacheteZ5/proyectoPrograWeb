@@ -69,5 +69,6 @@
 </div>
 <div>
     <a asp-action="Delete" asp-controller="Users" asp-route-id="@Model?.Id">Disable User</a> |
-    <a asp-action="Index" asp-controller="Chats" asp-route-id="@Model?.Id">Back to Chat</a>
+    <a asp-action="Index" asp-controller="Chats" asp-route-id="@Model?.Id">Back to Contacts</a> |
+    <a asp-action="SignOut" asp-controller="Users" asp-route-id="@Model?.Id">Log Out</a>
 </div>

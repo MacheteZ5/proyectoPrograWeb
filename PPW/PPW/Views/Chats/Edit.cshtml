@@ -10,30 +10,16 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" asp-route-userID="@ViewBag.ID" asp-route-contact="@ViewBag.ContactID">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="ContactId" class="control-label"></label>
-                <input asp-for="ContactId" class="form-control" />
-                <span asp-validation-for="ContactId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Mensaje" class="control-label"></label>
                 <input asp-for="Mensaje" class="form-control" />
                 <span asp-validation-for="Mensaje" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FecTransac" class="control-label"></label>
-                <input asp-for="FecTransac" class="form-control" />
-                <span asp-validation-for="FecTransac" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+                <br />
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -41,7 +27,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Menu" asp-controller="Chats" asp-route-contact="@ViewBag.ContactID" asp-route-id="@ViewBag.ID">Back to Chat's Menu'</a>
 </div>
 
 @section Scripts {

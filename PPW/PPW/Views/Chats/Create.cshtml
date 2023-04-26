@@ -21,7 +21,12 @@
     <div class="row p-1" hidden>
         <div class="col-1">ContactId</div>
         <div class="col-5"><p type="text" id="contactIdInput" value="@ViewBag.ContactID">@ViewBag.ContactID</p></div>
-        <div class="col-lg-9 col-md-8"><p type="text" id="Token" value="@ViewBag.Token">@ViewBag.Token</p></div>
+    </div>
+    <div class="row">
+        <div class="text-align: center">
+            <br />
+            <a asp-action="Menu"  asp-controller= "Chats" asp-route-id="@ViewBag.ID" asp-route-contact="@ViewBag.Contact" class="btn btn-primary">Chat's Menu</a>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-3 col-md-4 label"><strong>User:</strong></div>

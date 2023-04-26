@@ -9,7 +9,7 @@ namespace PPW.Functions
     public class APIService
     {
         private static int timeout = 30;
-        private static string url = "https://localhost:7145/";
+        private static string url = "https://192.168.0.6:443/";
 
         //User Controller
         public static async System.Threading.Tasks.Task<bool> GetValidationUser(string UserName, int opcion)
@@ -183,8 +183,6 @@ namespace PPW.Functions
                 return null;
             }
         }
-
-
         public static async System.Threading.Tasks.Task<Contact> GetContact(Contact contact, string token)
         {
             var json_ = JsonConvert.SerializeObject(contact);
@@ -283,6 +281,25 @@ namespace PPW.Functions
                 return null;
             }
         }
+        public static async System.Threading.Tasks.Task<Chat> GetChatbyID(int id, string token)
+        {
+            var json_ = JsonConvert.SerializeObject(id);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PostAsync(url + "Chats/GetChatbyID", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<Chat>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return null;
+            }
+        }
         public static async System.Threading.Tasks.Task<bool> SetChat(Chat chat, string token)
         {
             var json_ = JsonConvert.SerializeObject(chat);
@@ -302,6 +319,46 @@ namespace PPW.Functions
                 return false;
             }
         }
+        public static async System.Threading.Tasks.Task<bool> UpdateChat(Chat chat, string token)
+        {
+            var json_ = JsonConvert.SerializeObject(chat);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            // Pass the handler to httpclient(from you are calling api)
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PutAsync(url + "Chats/UpdateChat", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public static async System.Threading.Tasks.Task<bool> DeleteChat(Chat chat, string token)
+        {
+            var json_ = JsonConvert.SerializeObject(chat);
+            var content = new StringContent(json_, Encoding.UTF8, "application/json");
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+            HttpClient httpClient = new HttpClient(clientHandler);
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            var response = await httpClient.PostAsync(url + "Chats/DeleteChat", content);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         //Token Controller
         public static async System.Threading.Tasks.Task<PPW.Models.Token> GetToken(User user)
@@ -322,6 +379,5 @@ namespace PPW.Functions
                 return null;
             }
         }
-
     }
 }
