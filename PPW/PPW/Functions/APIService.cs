@@ -9,7 +9,7 @@ namespace PPW.Functions
     public class APIService
     {
         private static int timeout = 30;
-        private static string url = "https://192.168.0.6:443/";
+        private static string url = "https://10.204.112.33:443/";
 
         //User Controller
         public static async System.Threading.Tasks.Task<bool> GetValidationUser(string UserName, int opcion)

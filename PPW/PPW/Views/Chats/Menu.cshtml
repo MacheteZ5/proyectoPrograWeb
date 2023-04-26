@@ -36,8 +36,15 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" asp-route-userID="@ViewBag.ID" asp-route-contact="@ViewBag.ContactID">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" asp-route-userID="@ViewBag.ID" asp-route-contact="@ViewBag.ContactID">Delete</a>
+                    @if (item.UserId == @ViewBag.ID)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-userID="@ViewBag.ID" asp-route-contact="@ViewBag.ContactID">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" asp-route-userID="@ViewBag.ID" asp-route-contact="@ViewBag.ContactID">Delete</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id" asp-route-userID="@ViewBag.ID" asp-route-contact="@ViewBag.ContactID">Delete</a>
+                    }
                 </td>
             </tr>
         }

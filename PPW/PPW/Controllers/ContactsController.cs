@@ -54,12 +54,12 @@ namespace PPW.Controllers
             var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
             if (await Functions.APIService.SetContact(contact, token))
             {
-                _toastNotification.AddSuccessToastMessage("Creación de contacto realizado exitosamente.");
+                _toastNotification.AddSuccessToastMessage("Creación de contacto realizada exitosamente.");
                 return RedirectToAction("Index", "Chats", new { @ID = contact.PuserId });
             }
             else
             {
-                _toastNotification.AddErrorToastMessage("Creación de contacto incorrecta.");
+                _toastNotification.AddErrorToastMessage("Creación de contacto realizada incorrectamente.");
             }
             ViewBag.ID = contact.PuserId;
             var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(contact.PuserId) };
@@ -124,11 +124,12 @@ namespace PPW.Controllers
             var contactInfo = await Functions.APIService.GetContact(contact,token);
             if (await Functions.APIService.DeleteContact(contactInfo, token))
             {
+                _toastNotification.AddSuccessToastMessage("Eliminación de contacto realizada exitosamente.");
                 return RedirectToAction("Index", "Chats", new { @ID = contact.PuserId });
             }
             else
             {
-                _toastNotification.AddErrorToastMessage("Eliminación de contacto incorrecta.");
+                _toastNotification.AddErrorToastMessage("Eliminación de contacto realizada incorrectamente.");
             }
             ViewBag.ID = contact.PuserId;
             var alternateList = new List<User>() { await Functions.APIService.GetUserbyID(contact.PuserId) };

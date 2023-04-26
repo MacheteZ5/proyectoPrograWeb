@@ -70,6 +70,7 @@ namespace PPW.Controllers
                 var chats = await Functions.APIService.GetChat(contactInfo.Id, token);
                 return View(chats.ToList());
             }
+            _toastNotification.AddErrorToastMessage("Creación de chat realizada incorrectamente.");
             return RedirectToAction("Index", "Chats", Id);
         }
         [Authorize]
@@ -90,6 +91,7 @@ namespace PPW.Controllers
                 var chats = await Functions.APIService.GetChat(contactInfo.Id, token);
                 return View(chats.ToList());
             }
+            _toastNotification.AddErrorToastMessage("No se pudo obtener la información del chat correspondiente.");
             return RedirectToAction("Index", "Chats", Id);
         }
         public IActionResult Return(int id)
@@ -100,6 +102,7 @@ namespace PPW.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(int id, int userID, int contact)
         {
+            _toastNotification.AddInfoToastMessage("Puede modificar el mensaje seleccionado previamente.");
             var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
             var Chat = await Functions.APIService.GetChatbyID(id, token);
             if(Chat != null)
@@ -134,7 +137,7 @@ namespace PPW.Controllers
             }
             else
             {
-                _toastNotification.AddWarningToastMessage("No se pudo obtener la información correspondiente del mensaje seleccionado.");
+                _toastNotification.AddWarningToastMessage("No se pudo obtener la información correspondiente al mensaje seleccionado.");
             }
             return View(chat);
         }
@@ -142,6 +145,7 @@ namespace PPW.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id, int userID, int contact)
         {
+            _toastNotification.AddInfoToastMessage("Puede eliminar el mensaje seleccionado previamente.");
             var token = User.Claims.FirstOrDefault(s => s.Type == "TokenAPI")?.Value;
             var chat = await Functions.APIService.GetChatbyID(id, token);
             if(chat != null)
@@ -168,7 +172,7 @@ namespace PPW.Controllers
                 _toastNotification.AddSuccessToastMessage("Mensaje eliminado exitosamente.");
                 return RedirectToAction("Create", "Chats", new { @Id = userID, @Contact=contact});
             }
-            _toastNotification.AddErrorToastMessage("Error al eliminar mensaje.");
+            _toastNotification.AddErrorToastMessage("Error al realizar eliminación de mensaje.");
             return RedirectToAction("Index", "Chats", new { @ID = userID});
         }
     }
