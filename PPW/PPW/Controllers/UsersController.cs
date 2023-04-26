@@ -181,6 +181,7 @@ namespace PPW.Controllers
             if (await Functions.APIService.DisableUser(user,token))
             {
                 _toastNotification.AddSuccessToastMessage("Usuario deshabilitado exitosamente.");
+                await HttpContext.SignOutAsync();
                 return RedirectToAction(nameof(Index));
             }
             _toastNotification.AddErrorToastMessage("Error al deshabilitar usuario.");
