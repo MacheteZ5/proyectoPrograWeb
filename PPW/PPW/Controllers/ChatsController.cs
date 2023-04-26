@@ -66,6 +66,7 @@ namespace PPW.Controllers
                 ViewBag.Username = user.Username;
                 ViewBag.Contactname = sUser.Username;
                 ViewBag.ID = Id;
+                ViewBag.Token = token;
                 var chats = await Functions.APIService.GetChat(contactInfo.Id, token);
                 return View(chats.ToList());
             }
